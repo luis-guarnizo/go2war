@@ -28,6 +28,13 @@ La pantalla principal SHALL mostrar: número de miembros activos, la lista "Por 
 - **WHEN** el personal inicia sesión
 - **THEN** ve los contadores y listas con nombre, plan, fecha de vencimiento y teléfono de cada miembro
 
+### Requirement: Ingresos de hoy
+El panel SHALL mostrar la lista de ingresos del día (hora, nombre, plan y estado), actualizada al menos cada 30 segundos, destacando en rojo a quienes ingresaron sin plan vigente.
+
+#### Scenario: Ingreso sin plan vigente
+- **WHEN** un miembro con plan vencido escanea el QR de la entrada
+- **THEN** aparece en "Ingresos de hoy" resaltado en rojo para que recepción lo aborde
+
 ### Requirement: Contacto rápido por WhatsApp
 Cada miembro en las listas "Por vencer" y "Vencidos" SHALL tener una acción que abra WhatsApp con un mensaje de recordatorio prellenado con su nombre, plan y fecha de vencimiento. El envío lo realiza manualmente el personal.
 

@@ -7,10 +7,10 @@ Garantiza que solo el personal autorizado de GO2WAR GYM pueda ver y modificar la
 ## ADDED Requirements
 
 ### Requirement: Ingreso con usuario y contraseña
-El sistema SHALL exigir que el personal inicie sesión con usuario y contraseña antes de acceder a cualquier pantalla o dato.
+El sistema SHALL exigir que el personal inicie sesión con usuario y contraseña antes de acceder a cualquier pantalla o dato, excepto la página pública de ingreso por QR de los miembros.
 
 #### Scenario: Acceso sin sesión
-- **WHEN** una persona sin sesión abre cualquier pantalla de la app
+- **WHEN** una persona sin sesión abre cualquier pantalla de la app distinta de la página de ingreso por QR
 - **THEN** el sistema la redirige a la pantalla de ingreso sin mostrar datos
 
 #### Scenario: Credenciales correctas
@@ -29,7 +29,7 @@ El sistema SHALL permitir cerrar sesión y SHALL invalidar la sesión tras 12 ho
 - **THEN** la sesión queda invalidada y se muestra la pantalla de ingreso
 
 ### Requirement: Roles de administrador y recepción
-El sistema SHALL distinguir dos roles: "administrador" (acceso total) y "recepción" (puede registrar miembros, ventas y asistencias, pero no editar precios, anular ventas ni gestionar usuarios).
+El sistema SHALL distinguir dos roles: "administrador" (acceso total) y "recepción" (puede registrar miembros, ventas e ingresos, pero no editar precios, anular ventas ni gestionar usuarios).
 
 #### Scenario: Recepción intenta editar un precio
 - **WHEN** un usuario con rol recepción intenta modificar el precio de un plan

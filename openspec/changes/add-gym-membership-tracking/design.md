@@ -30,7 +30,8 @@ Base de datos relacional por la naturaleza de los datos (miembros ↔ membresía
 - `Member` (nombre, teléfono, documento único opcional, fecha nacimiento, correo, contacto emergencia, notas, activo, `searchText` normalizado sin tildes).
 - `Sale` (fecha de pago, plan, `planSnapshot` JSON con nombre/precio/duración al momento de la venta, valor cobrado, medio de pago, nota, usuario, `voidedAt?`, `voidReason?`).
 - `Membership` (venta, miembro, fecha inicio, fecha fin, `classesTotal?`, `classesUsed`). Un plan pareja = 1 `Sale` + 2 `Membership`.
-- `Attendance` (miembro, membresía?, fecha/hora, usuario).
+- `CheckIn` (miembro, membresía?, fecha/hora, `day` DATE en hora de Colombia, origen `QR|STAFF`, `withoutValidPlan` bool, usuario? si fue manual). Índice único (`memberId`, `day`) para garantizar un ingreso por día incluso con escaneos simultáneos.
+- `MemberDevice` (miembro, hash del token, creado, último uso) para recordar el celular del miembro.
 
 Montos como enteros en COP (sin decimales). Fechas de membresía como `DATE` (sin hora) para evitar errores de zona horaria; "hoy" se calcula siempre en America/Bogota.
 
@@ -46,10 +47,18 @@ Auth.js (NextAuth) con proveedor de credenciales, contraseñas con bcrypt, sesi�
 ### 7. UI
 Tailwind CSS + componentes shadcn/ui, mobile-first, colores de la marca (negro y azul GO2WAR). Navegación inferior: Panel · Miembros · Vender · Pagos. Formato de moneda con `Intl.NumberFormat('es-CO')` sin decimales. Manifest PWA para instalar en el celular.
 
-### 8. WhatsApp
+### 8. Ingreso por QR
+- El QR fijo apunta a `https://<dominio>/ingreso`; el admin lo descarga como PDF imprimible (librería `qrcode`) desde Configuración.
+- `/ingreso` es una ruta pública fuera del middleware de sesión del personal. Primer uso: formulario de cédula → si existe un miembro activo, se crea el `CheckIn` y un `MemberDevice` con token aleatorio de 32 bytes guardado en cookie `httpOnly`, `secure`, de 1 año; en BD solo se guarda su hash. Escaneos siguientes: la cookie identifica al miembro y se muestra un botón "Registrar mi ingreso" (evita registros accidentales por precarga del enlace).
+- Registro de ingreso y descuento de entreno en una transacción; el índice único (`memberId`, `day`) hace idempotente el doble escaneo.
+- Respuesta mínima: nombre de pila + estado. Nunca se revela si una cédula existe más allá de "No te encontramos". Límite de intentos por IP (p. ej. 10/min) para evitar enumeración de cédulas.
+- Alternativa descartada por ahora: QR rotativo mostrado en una tablet en la entrada (evita ingresos desde fuera del gym, pero exige un dispositivo encendido). El diseño permite agregarlo luego validando un token de corta duración en `/ingreso`.
+- "Ingresos de hoy" en el panel se refresca con polling cada 30 s (sin websockets).
+
+### 9. WhatsApp
 Enlace `https://wa.me/57<teléfono>?text=<mensaje>`; no requiere API ni costo.
 
-### 9. Despliegue
+### 10. Despliegue
 Vercel (gratis) + Neon Postgres. `prisma migrate deploy` en el build. Seed idempotente con los 10 planes 2026.
 
 ## Risks / Trade-offs
@@ -57,6 +66,9 @@ Vercel (gratis) + Neon Postgres. `prisma migrate deploy` en el build. Seed idemp
 - [Pérdida de datos] → Postgres administrado con backups automáticos; exportación CSV de miembros y pagos como respaldo manual.
 - [Errores de zona horaria en vencimientos] → fechas `DATE` sin hora y "hoy" calculado en America/Bogota; pruebas unitarias de bordes de mes.
 - [Supuestos de plan pareja / vigencia de paquetes incorrectos] → son datos del plan (`peopleCount`, `validityDays`) editables por el admin, no lógica fija.
+- [Ingreso desde fuera del gym con foto del QR] → aceptado por ahora: un ingreso por día limita el abuso a descontar entrenos propios y los ingresos sin plan quedan señalados; evolución prevista a QR rotativo.
+- [Celular compartido o prestado] → botón "No soy yo" y recepción puede eliminar ingresos del día.
+- [Enumeración de cédulas en la página pública] → mensaje genérico y límite de intentos por IP.
 - [Dependencia de conexión a internet en recepción] → aceptado (non-goal offline); la app funciona con datos móviles.
 - [Plan gratuito de hosting con límites] → el volumen del gym está muy por debajo de los límites; se puede migrar a plan pago sin cambios de código.
 

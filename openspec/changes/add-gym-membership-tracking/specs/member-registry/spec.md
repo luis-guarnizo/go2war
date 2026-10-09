@@ -2,15 +2,15 @@
 
 ## Purpose
 
-Mantiene el registro de las personas que entrenan en el gym para poder asociarles planes, pagos y asistencias.
+Mantiene el registro de las personas que entrenan en el gym para poder asociarles planes, pagos e ingresos.
 
 ## ADDED Requirements
 
 ### Requirement: Registro de miembro
-El sistema SHALL permitir registrar un miembro con nombre completo y teléfono (obligatorios), y opcionalmente número de documento, fecha de nacimiento, correo, contacto de emergencia y notas.
+El sistema SHALL permitir registrar un miembro con nombre completo, cédula y teléfono (obligatorios, la cédula se usa para el ingreso por QR), y opcionalmente fecha de nacimiento, correo, contacto de emergencia y notas.
 
 #### Scenario: Registro exitoso
-- **WHEN** recepción registra a "Ana Pérez" con teléfono "3001234567"
+- **WHEN** recepción registra a "Ana Pérez" con cédula "1020304050" y teléfono "3001234567"
 - **THEN** el miembro queda creado y se muestra su ficha
 
 #### Scenario: Falta un dato obligatorio
@@ -32,7 +32,7 @@ El sistema SHALL permitir buscar miembros por nombre, teléfono o documento, con
 - **THEN** aparece "Ana Pérez" en los resultados junto con su estado de membresía
 
 ### Requirement: Ficha del miembro
-La ficha del miembro SHALL mostrar sus datos, su estado actual (activo, por vencer, vencido o sin plan), la membresía vigente con fecha de vencimiento o entrenos restantes, y el historial de ventas y asistencias.
+La ficha del miembro SHALL mostrar sus datos, su estado actual (activo, por vencer, vencido o sin plan), la membresía vigente con fecha de vencimiento o entrenos restantes, y el historial de ventas e ingresos.
 
 #### Scenario: Consultar ficha
 - **WHEN** se abre la ficha de un miembro con Mensualidad vigente hasta el 14 de noviembre de 2026

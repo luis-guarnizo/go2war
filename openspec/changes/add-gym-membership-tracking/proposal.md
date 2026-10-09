@@ -24,8 +24,8 @@ GO2WAR GYM lleva hoy el control de mensualidades de forma manual, lo que hace di
 
 - Registro de miembros (datos de contacto, estado).
 - Registro de pagos/ventas de planes: al vender un plan se crea una membresía con fecha de inicio y vencimiento calculadas, y queda el pago registrado con su medio de pago.
-- Control de asistencia para paquetes de entrenos (descuento de entrenos restantes).
-- Panel de control: miembros activos, por vencer (próximos 5 días), vencidos y recaudo del período.
+- Ingreso de miembros por código QR: un QR impreso en la entrada abre una página donde el miembro se identifica con su cédula (el celular lo recuerda para la próxima vez); el ingreso queda registrado, ve si su plan está vigente y, si tiene paquete de entrenos, se descuenta uno. Quien no está registrado es enviado a recepción.
+- Panel de control: miembros activos, ingresos de hoy, por vencer (próximos 5 días), vencidos y recaudo del período.
 
 **Supuestos registrados** (confirmar con el gym):
 - El precio "$90.0000" de la imagen se interpreta como $90.000.
@@ -39,8 +39,8 @@ GO2WAR GYM lleva hoy el control de mensualidades de forma manual, lo que hace di
 - `plan-catalog`: Catálogo de planes con tipo, duración o número de entrenos, cantidad de personas y precio vigente.
 - `member-registry`: Alta, edición, búsqueda y consulta de miembros con su historial.
 - `membership-sales`: Venta/renovación de planes, cálculo de vigencia, registro del pago y anulaciones.
-- `class-pack-attendance`: Registro de asistencia y saldo de entrenos para paquetes de entrenos.
-- `membership-dashboard`: Estado de cada miembro (activo, por vencer, vencido) y resumen de recaudo.
+- `member-check-in`: Ingreso de miembros escaneando el QR de la entrada, registro manual por recepción y saldo de entrenos de los paquetes.
+- `membership-dashboard`: Estado de cada miembro (activo, por vencer, vencido), ingresos de hoy y resumen de recaudo.
 
 ### Modified Capabilities
 - Ninguna (proyecto nuevo).
@@ -49,5 +49,5 @@ GO2WAR GYM lleva hoy el control de mensualidades de forma manual, lo que hace di
 
 - Repositorio nuevo: se crea la aplicación web completa (frontend, backend y base de datos).
 - Nuevas dependencias: framework web, ORM y base de datos relacional (ver design.md).
-- Datos personales de miembros (nombre, documento, teléfono): requiere acceso autenticado.
-- Fuera de alcance en esta versión: pagos en línea, app nativa, recordatorios automáticos por WhatsApp/SMS, control de acceso físico (torniquete/huella), múltiples sedes, pagos parciales/abonos.
+- Datos personales de miembros (nombre, documento, teléfono): requiere acceso autenticado; la página pública de ingreso solo muestra al miembro su propio nombre y estado.
+- Fuera de alcance en esta versión: pagos en línea, app nativa, recordatorios automáticos por WhatsApp/SMS, control de acceso físico (torniquete/huella; el QR registra el ingreso pero no bloquea la puerta), QR rotativo anti-fraude, múltiples sedes, pagos parciales/abonos.
