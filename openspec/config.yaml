@@ -1,0 +1,7 @@
+schema: spec-driven
+
+context: |
+  Write all OpenSpec artifacts in Spanish (Colombia).
+  Users are the staff of GO2WAR GYM (one gym location); the UI must be in Spanish and mobile-first.
+  Currency is COP, shown without decimals using "." as thousands separator (e.g. $135.000).
+  Plan prices come from the gym's "Planes Año 2026" price list and must be editable by the admin, not hard-coded.
